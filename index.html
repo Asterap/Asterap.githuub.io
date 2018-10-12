@@ -1,11 +1,69 @@
-
-<!--<script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+<script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
 <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.5.5/aframe/build/aframe-ar.js"></script>
 <body style='margin : 0px; overflow: hidden;'>
 <a-scene embedded arjs='sourceType: webcam;'>
-    <a-box color="#4CC3D9" position='0 0.5 0' material='opacity: 1;'></a-box>
+    <a-cylinder position="0 0.5 0" radius="0.5" height="0.1" color="#C5C5C5">
+        <a-cylinder position="0 0.1 0" radius="0.4" height="0.1" color="#383838">
+            <a-cylinder position="0 0.1 0" radius="0.1" height="0.2" color="#C5C5C5"></a-cylinder>
+            <a-box id="sec" position="0 0 0" radius="0.4" height="0.1" rotation="0 0 0" opacity="0">
+                <a-box position="0 0.1 -0.2" depth="0.4" height="0.1" width="0.1" color="#C5C5C5"></a-box>
+            </a-box>
+            <a-box id="min" position="0 0 0" radius="0.4" height="0.1" rotation="0 0 0" opacity="0">
+                <a-box position="0 0.1 -0.1" depth="0.35" height="0.1" width="0.1" color="#C5C5C5"></a-box>
+            </a-box>
+            <a-box id="hour" position="0 0 0" radius="0.4" height="0.1" rotation="0 0 0" opacity="0">
+                <a-box position="0 0.1 -0.1" depth="0.25" height="0.1" width="0.1" color="#C5C5C5"></a-box>
+            </a-box>
+        </a-cylinder>
+    </a-cylinder>
     <a-marker-camera preset='hiro'></a-marker-camera>
 </a-scene>
-</body>-->
+</body>
 
-<h1>helloWorld</h1>
+<script>
+    const sec = document.getElementById('sec');
+    const min = document.getElementById('min');
+    const hour = document.getElementById('hour');
+
+    var secDate = new Date().getSeconds()+1;
+    var minDate = new Date().getMinutes();
+    var hoursDate = new Date().getHours();
+
+    function timeConverter(time, unity) {
+        if (unity === 'sec' || unity === 'min') {
+            console.log(time);
+            return 360 / 60 * time
+        } else {
+            return time * (360 / 12)
+        }
+    }
+
+    sec.setAttribute('rotation', {x: 0, y: -timeConverter(secDate, 'sec'), z: 0});
+    min.setAttribute('rotation', {x: 0, y: -timeConverter(minDate, 'min'), z: 0});
+    hour.setAttribute('rotation', {x: 0, y: -timeConverter(hoursDate, 'hour'), z: 0});
+
+
+    setInterval(function () {
+        if (secDate === 60) {
+            minDate++;
+            secDate = 1;
+        }
+        else {
+            secDate++;
+        }
+
+        if (minDate === 60) {
+            hoursDate++;
+            minDate = 1;
+        }
+
+        if (hoursDate === 12) {
+            hoursDate = 0
+        }
+
+        sec.setAttribute('rotation', {x: 0, y: -timeConverter(secDate, 'sec'), z: 0});
+        min.setAttribute('rotation', {x: 0, y: -timeConverter(minDate, 'min'), z: 0});
+        hour.setAttribute('rotation', {x: 0, y: -timeConverter(hoursDate, 'hour'), z: 0});
+    }, 1000)
+
+</script>
